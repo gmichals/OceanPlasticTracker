@@ -1,0 +1,27 @@
+river,watershed_population,plastic_waste_kg_person_year,waste_collection_percent,mismanaged_waste_percent,annual_rainfall_mm,source,reference_year,mismanaged_plastic_kg_person_year,country_proxy,plastic_proxy_scope,plastic_proxy_source
+Pasig,13815397,,,,2198.9,"HydroBASINS (au, lev12) + WorldPop 2020 + WorldClim 2.1",Population: 2020; precipitation: 1970-2000,37.23,Philippines,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Klang,5739710,,,,2413.5,"HydroBASINS (as, lev12) + WorldPop 2020 + WorldClim 2.1",Population: 2020; precipitation: 1970-2000,25.49,Malaysia,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Ulhas,9219537,,,,2988.1,"HydroBASINS (as, lev12) + WorldPop 2020 + WorldClim 2.1",Population: 2020; precipitation: 1970-2000,9.51,India,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Ganges,,,,,,, ,9.51,,Transboundary basin: national proxy not assigned,
+Mekong,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Indus,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Yangtze,,,,,,,,,China,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Pearl River,,,,,,,,,China,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Amazon,35911045,,,,2156.2,"HydroBASINS (sa, lev8) + WorldPop 2020 + WorldClim 2.1",Population: 2020; precipitation: 1970-2000,,,Transboundary basin: national proxy not assigned,
+Mississippi,84621561,,,,776.7,WorldPop 2020; WorldClim 2.1,Population: 2020; precipitation: 1970-2000,,United States,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Motagua,,,,,,, ,17.69,Guatemala,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Congo,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Niger,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Rhine,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Yellow River,,,,,,,,,China,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Orinoco,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Citarum,,,,,,,,,Indonesia,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Tijuana,,,,,,,,,,Transboundary basin: national proxy not assigned,
+Guayas,,,,,,,,,Ecuador,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Fly River,,,,,,,,,Papua New Guinea,"Country-level proxy, NOT watershed-specific",Meijer et al. (2021) via Our World in Data; 2019
+Tullahan,,,,,,, ,37.23,,,
+Meycauayan,,,,,,, ,37.23,,,
+Pampanga,,,,,,, ,37.23,,,
+Libmanan,,,,,,, ,37.23,,,
+Rio Grande de Mindanao,,,,,,, ,37.23,,,
+Agno,,,,,,, ,37.23,,,

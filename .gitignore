@@ -1,0 +1,32 @@
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary files and backups
+*.log
+*.tmp
+*.bak
+*.before_cleanup
+.DS_Store
+
+# Local environments and credentials
+.env
+.env.*
+.venv/
+venv/
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# Streamlit cache
+.streamlit/cache/
+
+# Original Zarr simulations (retained locally)
+*.zarr/
+
+# Temporary NetCDF conversion test
+results/amazon_test.nc
+
+# Backup application files
+*.before_netcdf

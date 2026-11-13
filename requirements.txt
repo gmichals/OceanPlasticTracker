@@ -1,0 +1,7 @@
+streamlit
+plotly
+numpy
+xarray
+zarr>=2.18,<3
+numcodecs<0.16
+pandas
