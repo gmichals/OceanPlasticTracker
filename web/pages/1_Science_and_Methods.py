@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 
 st.set_page_config(
@@ -6,86 +7,388 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("Science & Methods")
-st.subheader("How does plastic move through the world's oceans?")
-
 st.markdown("""
-Rivers transport plastic waste from terrestrial environments into
-coastal waters. Once plastic enters the ocean, its movement is
-influenced by ocean currents, turbulent mixing, winds, and
-interactions with coastlines.
+<style>
+.block-container {
+    max-width: 1100px;
+    padding-top: 2rem;
+}
+.science-hero {
+    background: linear-gradient(120deg, #071b32, #075c76);
+    padding: 48px 42px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+}
+.science-hero h1 {
+    color: #ffffff;
+    font-size: 3rem;
+    line-height: 1.15;
+    margin-bottom: 12px;
+}
+.science-hero p {
+    color: #d2eaf2;
+    font-size: 1.15rem;
+}
+.eyebrow {
+    color: #7ce1e9 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 2px;
+    font-weight: 700;
+}
+.section-number {
+    color: #008eaa;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
 
-The **Ocean Plastic Tracker** allows students to explore potential
-transport pathways using numerical particle-tracking simulations.
+/* Refined scientific typography */
+@media (min-width: 769px) {
+    .stMarkdown h2 {
+        font-size: 1.65rem !important;
+        line-height: 1.3 !important;
+        color: #087f9c !important;
+        font-weight: 650 !important;
+    }
+}
 
-## How the model works
+.stMarkdown p, .stMarkdown li {
+    font-size: 1.12rem;
+    line-height: 1.75;
+}
 
-The tracker uses a **Lagrangian particle-tracking approach**,
-implemented with the OceanParcels framework.
+.section-number {
+    color: #00a7bd !important;
+    font-size: 0.82rem !important;
+    font-weight: 750;
+}
 
-Rather than observing ocean water at fixed locations, a Lagrangian
-model follows individual particles as they move through a
-time-varying velocity field.
+@media (max-width: 768px) {
+    .stMarkdown h2 {
+        font-size: 1.4rem !important;
+        color: #087f9c !important;
+    }
+    .stMarkdown p, .stMarkdown li {
+        font-size: 1.05rem;
+        line-height: 1.65;
+    }
+    .science-hero {
+        padding: 25px 20px;
+    }
+    .science-hero h1 {
+        font-size: 2rem;
+    }
+}
 
-The basic transport equation is:
+
+/* SCIENCE TYPOGRAPHY V2 */
+[data-testid="stMain"] h2 {
+    font-size: 1.55rem !important;
+    color: #0095B3 !important;
+    font-weight: 650 !important;
+    line-height: 1.3 !important;
+}
+
+[data-testid="stMain"] [data-testid="stMarkdownContainer"] p {
+    font-size: 19px !important;
+    line-height: 1.8 !important;
+}
+
+[data-testid="stMain"] [data-testid="stMarkdownContainer"] li {
+    font-size: 19px !important;
+    line-height: 1.7 !important;
+}
+
+@media (max-width: 768px) {
+    [data-testid="stMain"] h2 {
+        font-size: 1.35rem !important;
+    }
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMain"] [data-testid="stMarkdownContainer"] li {
+        font-size: 17px !important;
+    }
+}
+
+</style>
+<div class="science-hero">
+    <p class="eyebrow">THE SCIENCE BEHIND THE SIMULATION</p>
+    <h1>How Does Plastic Travel Across an Ocean?</h1>
+    <p>From river mouths to ocean gyres: understanding the physics
+    of floating particle transport.</p>
+</div>
+""", unsafe_allow_html=True)
+
+a, b, c = st.columns(3)
+a.metric("River systems", "20")
+b.metric("Simulation duration", "~20 years")
+c.metric("Numerical particles", "400")
+
+st.divider()
+
+
+st.markdown(
+    '<span class="section-number">01 / FROM RIVERS TO THE OCEAN</span>',
+    unsafe_allow_html=True
+)
+# AMAZON RIVER PLUME FIGURE
+st.divider()
+st.header("From Rivers to the Open Ocean")
+
+st.write("""
+Rivers transport water, sediments, nutrients, and plastic debris
+from continents into the coastal ocean.
+
+Once released, floating plastic can be transported by coastal
+currents, wind-driven circulation, and larger ocean currents.
+Some particles remain near shore, while others may reach the
+open ocean.
+
+The Amazon River provides a striking example of how river-derived
+material spreads into the Atlantic Ocean.
+""")
+
+st.image(
+    str(Path(__file__).resolve().parent.parent /
+        "assets/science/amazon_river_plume.jpg"),
+    use_container_width=True,
+)
+
+st.caption(
+    'Figure 1. Amazon River plume. NASA satellite imagery illustrating the transport of suspended sediment from the Amazon River into the Atlantic Ocean. The visible sediment plume is not a direct observation of plastic. Source: NASA Earth Observatory.'
+)
+
+st.write("""
+**How this relates to our tracker:** The simulation releases
+virtual particles near selected river mouths and follows their
+subsequent movement through modeled ocean currents. These
+trajectories represent possible transport pathways rather than
+direct observations of plastic concentrations.
+""")
+
+st.divider()
+
+st.markdown('<span class="section-number">02 / THE BIG PICTURE</span>',
+            unsafe_allow_html=True)
+st.header("The Ocean Is Always Moving")
+
+# NASA CIRCULATION FIGURE
+st.image(
+    str(Path(__file__).resolve().parent.parent /
+        "NASA circulation.png"),
+    use_container_width=True,
+)
+
+st.caption(
+    "Figure 2. Global ocean circulation. NASA's Perpetual Ocean visualization illustrates the complex structure of ocean currents and eddies. This is a NASA ocean-model visualization, not output from the Ocean Plastic Tracker. Source: NASA Scientific Visualization Studio."
+)
+
+
+st.write("""
+The ocean is a dynamic system of currents, eddies, and large-scale
+circulation patterns. Surface currents are influenced by winds,
+Earth's rotation, pressure gradients, and the distribution of
+temperature and salinity.
+
+When floating material enters the ocean, it becomes part of this
+moving system. Plastic released near one coastline can remain in
+coastal waters, move into the open ocean, or travel across entire
+ocean basins.
+
+Subtropical ocean gyres are especially important because their
+circulation can create regions where floating material accumulates.
+However, an ocean gyre is not a stationary whirlpool, and not every
+particle entering a gyre remains there.
+""")
+
+st.markdown('<span class="section-number">03 / THE NUMERICAL MODEL</span>',
+            unsafe_allow_html=True)
+st.header("Following Particles Through the Ocean")
+
+st.write("""
+The Ocean Plastic Tracker uses **OceanParcels**, a Lagrangian
+particle-tracking framework.
+
+In an Eulerian description, ocean velocity is measured at fixed
+locations. In a Lagrangian description, we follow the position of
+individual particles as they move through the velocity field.
+
+The simplest mathematical description of particle motion is:
 """)
 
 st.latex(r"\frac{d\mathbf{x}}{dt}=\mathbf{u}(\mathbf{x},t)")
 
-st.markdown("""
-Here, **x** represents particle position, **u** is the ocean
-current velocity, and **t** is time.
+st.image(
+    str(Path(__file__).resolve().parent.parent / "assets/science/lagrangian_advection.gif"),
+    use_container_width=True,
+)
 
-## Physical processes
+st.caption(
+    'Figure 3. Lagrangian particle advection. Original educational animation showing particles transported by an idealized ocean velocity field. This demonstrates the particle-tracking principle rather than actual historical ocean conditions.'
+)
 
-### Ocean circulation
-Large-scale currents transport floating material along coastlines,
-through boundary currents, and into the open ocean. Subtropical
-gyres can retain floating material for extended periods.
 
-### Turbulent dispersion
-Small-scale ocean motions can cause particles released from the
-same location to follow different trajectories.
+st.write("""
+Here, **x** is particle position, **u** is the local ocean current
+velocity, and **t** is time.
 
-### Coastline interactions
-Floating material may become stranded along coastlines or return
-to the ocean. Numerical models approximate these processes using
-simplified rules.
+At each numerical time step, the model estimates the ocean velocity
+at the particle's position and updates its location. Repeating
+this calculation generates a trajectory.
 
-## Explore 20 years of transport
+The ocean currents are provided by historical ocean circulation
+data rather than calculated directly by the particle tracker.
+""")
 
-The current tracker includes historical simulations for 20 river
-systems, with 20 numerical particles per river and approximately
-20 years of daily particle positions.
+st.markdown('<span class="section-number">04 / TURBULENT DISPERSION</span>',
+            unsafe_allow_html=True)
+st.header("Why Do Particles Follow Different Paths?")
 
-These simulations allow students to compare transport pathways
-across ocean basins.
+st.write("""
+Ocean currents contain motions across a wide range of spatial and
+temporal scales. Even high-resolution circulation products cannot
+resolve every small eddy and turbulent fluctuation.
 
-## Questions to investigate
+Particle-tracking models can approximate unresolved horizontal
+mixing by adding stochastic displacements to the motion caused by
+resolved ocean currents.
 
-1. How quickly do particles leave coastal waters?
-2. Do particles from different rivers enter the same ocean gyres?
-3. How do pathways differ among ocean basins?
-4. Can particles move between ocean basins?
-5. Why do particles from the same river follow different paths?
+A simplified stochastic transport equation is:
+""")
 
-## Model limitations
+st.latex(
+    r"d\mathbf{x}=\mathbf{u}(\mathbf{x},t)\,dt"
+    r"+\sqrt{2K_h}\,d\mathbf{W}"
+)
 
-The tracker illustrates potential transport pathways rather than
-predicting the precise destination of individual plastic objects.
+st.image(
+    str(Path(__file__).resolve().parent.parent /
+        "assets/science/turbulent_diffusion.gif"),
+    use_container_width=True,
+)
 
-Numerical particles do not represent a specified mass of plastic.
-The model does not fully resolve fragmentation, biological fouling,
-sinking, or the diversity of real plastic materials.
+st.caption(
+    'Figure 4. Turbulent particle dispersion. Original educational animation showing how stochastic motion causes initially nearby particles to follow different paths while being transported by a common current. This is an idealized demonstration.'
+)
 
-The trajectories are historical simulations, not live observations
-or forecasts of present-day plastic pollution.
 
-**Key concept:** Ocean circulation connects distant coastlines,
-river systems, and marine environments over years to decades.
+st.write("""
+Here, **Kₕ** represents horizontal diffusivity and **W** represents
+a random process.
+
+This formulation illustrates why particles released near the same
+location can gradually separate. The degree of separation depends
+on ocean circulation and the diffusion parameterization.
+
+The precise diffusion settings used in our historical simulations
+will be documented separately.
+""")
+
+
+st.markdown(
+    '<span class="section-number">05 / OCEAN GYRES</span>',
+    unsafe_allow_html=True
+)
+st.header("Why Does Plastic Accumulate in Ocean Gyres?")
+
+st.write("""
+The major subtropical ocean gyres are large circulation systems
+formed by wind-driven currents, Earth's rotation, and the geometry
+of the ocean basins.
+
+Floating debris can accumulate in regions where surface transport
+converges. This convergence is influenced by wind-driven Ekman
+transport and the surrounding ocean circulation.
+
+**Circulation alone does not guarantee accumulation.**
+A purely rotating current can move particles around a gyre without
+bringing them closer together.
+
+The animation below illustrates how rotation combined with weak
+convergence can concentrate floating particles.
+""")
+
+st.image(
+    str(Path(__file__).resolve().parent.parent /
+        "assets/science/gyre_accumulation.gif"),
+    use_container_width=True,
+)
+
+st.caption(
+    'Figure 5. Gyre circulation and convergence. Original educational animation illustrating how rotation combined with weak inward transport can produce particle accumulation. Rotation alone does not guarantee accumulation. This is not a quantitative garbage-patch prediction.'
+)
+
+st.info(
+    "A garbage patch is not a solid island of plastic. "
+    "It is a broad region where floating debris may be more "
+    "concentrated than in surrounding waters."
+)
+
+st.markdown('<span class="section-number">06 / COASTAL PROCESSES</span>',
+            unsafe_allow_html=True)
+st.header("What Happens When Plastic Reaches Land?")
+
+st.write("""
+Coastal transport is particularly challenging to simulate.
+
+Real plastic debris may become stranded on beaches, remain trapped
+in estuaries, or return to the ocean through waves, tides, and
+storms.
+
+Our particle-tracking workflow includes simplified coastline
+interactions, including numerical approaches to coastline avoidance
+and beaching/refloating.
+
+These approximations are useful for exploring potential transport
+pathways, but they do not reproduce every physical process occurring
+along a real shoreline.
+""")
+
+st.markdown('<span class="section-number">07 / INTERPRETING RESULTS</span>',
+            unsafe_allow_html=True)
+st.header("What Can the Simulations Tell Us?")
+
+st.write("""
+The current Ocean Plastic Tracker contains historical simulations
+for 20 river systems, with 20 numerical particles released for each
+river.
+
+The resulting trajectories illustrate possible pathways of
+floating material through the global ocean circulation system.
+
+They allow comparisons between river sources, ocean basins, and
+individual particle histories.
+
+However, the numerical particles do not represent a specified
+mass of plastic. The simulations should not be interpreted as
+predictions of plastic concentration, total pollution mass, or
+the probability of debris reaching a particular destination.
 """)
 
 st.info(
-    "Return to the Ocean Plastic Tracker using the navigation menu "
-    "to explore the simulations."
+    "Scientific distinction: A particle trajectory describes a "
+    "possible transport pathway. Estimating plastic accumulation "
+    "requires additional assumptions about emissions, particle "
+    "properties, loss processes, and statistical sampling."
+)
+
+st.markdown('<span class="section-number">08 / EXPLORE</span>',
+            unsafe_allow_html=True)
+st.header("Investigate the Global Ocean")
+
+st.write("""
+Use the interactive tracker to compare river systems and investigate
+how ocean circulation connects distant marine environments.
+
+Try following particles from the Amazon, Mississippi, Yangtze,
+Ganges, and Congo rivers. Compare their pathways and consider
+how ocean basin geometry influences transport.
+""")
+
+if st.button("🌍 Launch Interactive Tracker", type="primary"):
+    st.switch_page("pages/2_Interactive_Tracker.py")
+
+st.divider()
+st.caption(
+    "Ocean Plastic Tracker | Educational particle-transport simulations "
+    "using OceanParcels and historical ocean circulation data."
 )
