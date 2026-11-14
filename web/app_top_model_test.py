@@ -23,22 +23,34 @@ pages.append(
 navigation = st.navigation(pages)
 
 
+
 import streamlit.components.v1 as components
 
-components.html(
-    """
-    <script>
-    const url = "https://oceanplastictracker.goatcounter.com/count";
-    const params = new URLSearchParams({
-        p: "/connection-test",
-        t: "Ocean Plastic Tracker Test"
-    });
-    fetch(url + "?" + params.toString(), {
-        mode: "no-cors"
-    });
-    </script>
-    """,
-    height=0,
-)
+# Track one visit per page per Streamlit session.
+page_path = "/" + navigation.url_path if navigation.url_path else "/"
+
+if "goatcounter_pages_seen" not in st.session_state:
+    st.session_state["goatcounter_pages_seen"] = set()
+
+if page_path not in st.session_state["goatcounter_pages_seen"]:
+    st.session_state["goatcounter_pages_seen"].add(page_path)
+
+    components.html(
+        f"""
+        <script>
+        const params = new URLSearchParams({{
+            p: {page_path!r},
+            t: "Ocean Plastic Tracker"
+        }});
+
+        fetch(
+            "https://oceanplastictracker.goatcounter.com/count?"
+            + params.toString(),
+            {{mode: "no-cors"}}
+        );
+        </script>
+        """,
+        height=0,
+    )
 
 navigation.run()
