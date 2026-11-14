@@ -28,6 +28,11 @@ def record_trajectory(river, event_type):
 
         return True
 
-    except Exception:
-        # Analytics must never prevent visitors from using the tracker.
+    except Exception as exc:
+        # Log only the exception class, never credentials or request details.
+        import logging
+        logging.warning(
+            "Analytics event failed: %s",
+            type(exc).__name__
+        )
         return False
