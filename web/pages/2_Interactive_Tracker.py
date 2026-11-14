@@ -7,7 +7,7 @@ from historical_river_datasets import HISTORICAL_RIVERS
 import streamlit as st
 
 if st.button("← Back to Home", key="back_to_home"):
-    st.switch_page("web/Home.py")
+    st.switch_page(str(Path(__file__).resolve().parents[1] / "Home.py"))
 
 
 import xarray as xr
