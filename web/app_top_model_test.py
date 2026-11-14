@@ -22,14 +22,20 @@ pages.append(
 
 navigation = st.navigation(pages)
 
+
 import streamlit.components.v1 as components
 
 components.html(
     """
-    <script
-      data-goatcounter="https://oceanplastictracker.goatcounter.com/count"
-      async
-      src="https://gc.zgo.at/count.js">
+    <script>
+    const url = "https://oceanplastictracker.goatcounter.com/count";
+    const params = new URLSearchParams({
+        p: "/connection-test",
+        t: "Ocean Plastic Tracker Test"
+    });
+    fetch(url + "?" + params.toString(), {
+        mode: "no-cors"
+    });
     </script>
     """,
     height=0,
