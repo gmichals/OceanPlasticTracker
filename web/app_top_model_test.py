@@ -21,4 +21,18 @@ pages.append(
 )
 
 navigation = st.navigation(pages)
+
+import streamlit.components.v1 as components
+
+components.html(
+    """
+    <script
+      data-goatcounter="https://oceanplastictracker.goatcounter.com/count"
+      async
+      src="https://gc.zgo.at/count.js">
+    </script>
+    """,
+    height=0,
+)
+
 navigation.run()
