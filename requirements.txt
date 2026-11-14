@@ -7,3 +7,4 @@ numcodecs<0.16
 pandas
 
 netCDF4
+supabase>=2,<3

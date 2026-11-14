@@ -105,6 +105,16 @@ if location is not None and location.startswith("──"):
 
 
 
+# Record genuine river selections, not ordinary Streamlit reruns.
+from usage_analytics import record_trajectory
+
+previous_river = st.session_state.get("analytics_previous_river")
+
+if location != previous_river:
+    if location in HISTORICAL_RIVERS:
+        record_trajectory(location, "river_selected")
+    st.session_state["analytics_previous_river"] = location
+
 # Historical trajectories for the smooth browser-side animation.
 historical_lon = None
 historical_lat = None
@@ -148,6 +158,7 @@ if location in HISTORICAL_RIVERS:
             selected_river_particle = random.choice(choices)
 
         st.session_state[selection_key] = selected_river_particle
+        record_trajectory(location, "new_particle")
         st.rerun()
 
     historical_lon = river_lon[selected_river_particle]
