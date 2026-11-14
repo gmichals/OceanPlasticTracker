@@ -5,6 +5,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from top_model_renderer import render_top_model
 from historical_river_datasets import HISTORICAL_RIVERS
 import streamlit as st
+
+if st.button("← Back to Home", key="back_to_home"):
+    st.switch_page("web/Home.py")
+
+
 import xarray as xr
 import numpy as np
 import plotly.graph_objects as go
@@ -114,17 +119,36 @@ if location in HISTORICAL_RIVERS:
 
     river_lon, river_lat = load_historical_river(dataset_path)
 
-    selection_key = f"historical_particle_{location}"
+    import random
+
+    selection_key = f"random_particle_{location}"
+    n_particles = river_lon.shape[0]
+
+    if n_particles == 0:
+        st.error("No particle trajectories available.")
+        st.stop()
 
     if selection_key not in st.session_state:
-        st.session_state[selection_key] = 0
+        st.session_state[selection_key] = random.randrange(n_particles)
 
-    selected_river_particle = st.sidebar.selectbox(
-        "Particle trajectory",
-        range(river_lon.shape[0]),
-        key=selection_key,
-        format_func=lambda i: f"Particle {i + 1}"
+    selected_river_particle = st.session_state[selection_key]
+
+    st.caption(
+        f"Tracking particle #{selected_river_particle + 1} "
+        f"of {n_particles} from the {location} River"
     )
+
+    if st.button("🔀 Start Again — New Random Particle",
+                 key=f"new_particle_{location}"):
+        if n_particles > 1:
+            choices = [
+                i for i in range(n_particles)
+                if i != selected_river_particle
+            ]
+            selected_river_particle = random.choice(choices)
+
+        st.session_state[selection_key] = selected_river_particle
+        st.rerun()
 
     historical_lon = river_lon[selected_river_particle]
     historical_lat = river_lat[selected_river_particle]
@@ -215,69 +239,142 @@ with map_col:
         )
 
 with info_col:
-    st.markdown("#### Watershed characteristics")
-
     if location in RIVERS:
-        st.markdown(f"**{location} River**")
-        st.caption(f"Receiving ocean: {RIVERS[location][0]}")
-    else:
-        st.markdown("**North Pacific demonstration**")
+        import csv
+        import html
 
-    import csv
+        environmental_data = {}
+        csv_path = Path(__file__).resolve().parent.parent / "river_environment.csv"
 
-    environmental_data = {}
-    csv_path = Path(__file__).resolve().parent.parent / "river_environment.csv"
+        if csv_path.exists():
+            with open(csv_path, newline="") as f:
+                environmental_data = {
+                    row["river"]: row
+                    for row in csv.DictReader(f)
+                }
 
-    if csv_path.exists():
-        with open(csv_path, newline="") as f:
-            environmental_data = {
-                row["river"]: row
-                for row in csv.DictReader(f)
-            }
+        env = environmental_data.get(location, {})
 
-    env = environmental_data.get(location, {})
+        def metric_value(field, suffix="", decimals=1, compact=False):
+            raw = env.get(field, "")
+            if not raw or not raw.strip():
+                return "Data pending"
+            try:
+                value = float(raw)
+                if compact and abs(value) >= 1_000_000:
+                    return f"{value / 1_000_000:,.1f} million"
+                if compact and abs(value) >= 1_000:
+                    return f"{value / 1_000:,.1f} thousand"
+                return f"{value:,.{decimals}f}{suffix}"
+            except ValueError:
+                return "Data pending"
 
-    def metric_value(field, suffix="", decimals=1):
-        raw = env.get(field, "")
-        if not raw or not raw.strip():
-            return "Data pending"
-        try:
-            value = float(raw)
-            return f"{value:,.{decimals}f}{suffix}"
-        except ValueError:
-            return "Data pending"
+        if location in RIVERS:
+            river_name = f"{location} River"
+            ocean = RIVERS[location][0]
+        else:
+            river_name = "North Pacific"
+            ocean = "Demonstration"
 
-    st.metric(
-        "Watershed population",
-        metric_value("watershed_population", decimals=0)
-    )
-
-    st.metric(
-        "Mismanaged plastic waste",
-        metric_value(
+        population = metric_value(
+            "watershed_population", decimals=0, compact=True
+        )
+        waste = metric_value(
             "mismanaged_plastic_kg_person_year",
             " kg/person/year", 2
         )
-    )
-    st.caption(
-        "Country-level · 2019 · Meijer et al. (2021) "
-        "via Our World in Data"
-    )
-
-    st.metric(
-        "Annual rainfall",
-        metric_value("annual_rainfall_mm", " mm/year", 0)
-    )
-    st.caption("Watershed-average precipitation")
-
-    if env.get("source", "").strip():
-        st.caption(
-            f"Source: {env['source']} "
-            f"({env.get('reference_year', 'year unspecified')})"
+        rainfall = metric_value(
+            "annual_rainfall_mm", " mm/year", 0
         )
 
-    st.divider()
-    st.caption(
-        "Environmental indicators will include source, "
-        "reference year, and geographic coverage."
-    )
+        source = env.get("source", "").strip()
+        reference_year = env.get("reference_year", "").strip()
+
+        source_text = (
+            f"Source: {source} ({reference_year or 'year unspecified'})"
+            if source else "Source information pending"
+        )
+
+        def safe(value):
+            return html.escape(str(value))
+
+        st.markdown(f"""
+        <style>
+        .watershed-panel {{
+            font-family: inherit;
+            overflow-wrap: anywhere;
+        }}
+        .watershed-panel .river-title {{
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.3rem;
+        }}
+        .watershed-panel .ocean-label {{
+            font-size: 0.82rem;
+            color: #82909d;
+            margin-bottom: 1.2rem;
+        }}
+        .watershed-panel .section-label {{
+            font-size: 0.70rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #82909d;
+            margin-bottom: 0.8rem;
+        }}
+        .watershed-panel .metric-block {{
+            padding: 0.7rem 0;
+            border-bottom: 1px solid rgba(128,128,128,0.18);
+        }}
+        .watershed-panel .metric-label {{
+            font-size: 0.80rem;
+            color: inherit;
+            opacity: 0.78;
+            margin-bottom: 0.25rem;
+        }}
+        .watershed-panel .metric-number {{
+            font-size: 1.22rem;
+            font-weight: 600;
+            line-height: 1.35;
+            overflow-wrap: anywhere;
+        }}
+        .watershed-panel .metric-note {{
+            font-size: 0.72rem;
+            color: #82909d;
+            line-height: 1.5;
+            margin-top: 0.35rem;
+        }}
+        .watershed-panel .source-note {{
+            font-size: 0.70rem;
+            color: #82909d;
+            line-height: 1.55;
+            margin-top: 1rem;
+        }}
+        </style>
+
+        <div class="watershed-panel">
+          <div class="river-title">{safe(river_name)}</div>
+          <div class="ocean-label">Receiving ocean: {safe(ocean)}</div>
+
+          <div class="section-label">WATERSHED CHARACTERISTICS</div>
+
+          <div class="metric-block">
+            <div class="metric-label">Watershed population</div>
+            <div class="metric-number">{safe(population)}</div>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-label">Mismanaged plastic waste</div>
+            <div class="metric-number">{safe(waste)}</div>
+            <div class="metric-note">Country-level · 2019 · Meijer et al. (2021)</div>
+          </div>
+
+          <div class="metric-block">
+            <div class="metric-label">Annual precipitation</div>
+            <div class="metric-number">{safe(rainfall)}</div>
+            <div class="metric-note">Watershed-average precipitation</div>
+          </div>
+
+          <div class="source-note">{safe(source_text)}</div>
+        </div>
+        """, unsafe_allow_html=True)
