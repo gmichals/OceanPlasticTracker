@@ -97,6 +97,25 @@ def render_top_model(lon_values, lat_values, output_hours=24):
     lon[~valid] = np.nan
     lat[~valid] = np.nan
 
+    # Cumulative great-circle distance for the selected particle.
+    # Use every stored position, not just animation frames.
+    lat1 = np.deg2rad(lat[:-1])
+    lat2 = np.deg2rad(lat[1:])
+    dlat = lat2 - lat1
+    dlon = np.deg2rad((lon[1:] - lon[:-1] + 180) % 360 - 180)
+    a = (np.sin(dlat / 2)**2
+         + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2)**2)
+    a = np.clip(a, 0, 1)
+    segments = 6371.0088 * 2 * np.arcsin(np.sqrt(a))
+    valid_segments = (
+        np.isfinite(lon[:-1]) & np.isfinite(lon[1:])
+        & np.isfinite(lat[:-1]) & np.isfinite(lat[1:])
+    )
+    selected_distance_km = float(
+        np.where(valid_segments, segments, 0.0).sum()
+    )
+    selected_distance_miles = selected_distance_km * 0.621371
+
     frame_step = max(1, round(30 * 24 / output_hours))
     indices = list(range(0, len(lon), frame_step))
     if indices[-1] != len(lon) - 1:
@@ -256,6 +275,30 @@ def render_top_model(lon_values, lat_values, output_hours=24):
         <span id="year">Year 0.0</span>
     </div>
 
+
+    <div id="distance-popup" style="
+        display:none;
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        z-index:1000;
+        background:#102b45;
+        color:white;
+        padding:28px 36px;
+        border:2px solid #4bd5e8;
+        border-radius:14px;
+        text-align:center;
+        box-shadow:0 8px 35px #0009;
+        min-width:280px;
+    ">
+        <h2>Your Particle's Journey</h2>
+        <p>Total distance traveled</p>
+        <h2>{selected_distance_km:,.1f} km</h2>
+        <p>{selected_distance_miles:,.1f} miles</p>
+        <button id="close-distance">Close</button>
+    </div>
+
     <script>
     const data = {payload};
     const graph = document.getElementById("trajectory_map");
@@ -265,7 +308,13 @@ def render_top_model(lon_values, lat_values, output_hours=24):
     let frame = 0;
     let timer = null;
 
+    const popup = document.getElementById("distance-popup");
+    document.getElementById("close-distance").onclick = () => {{
+        popup.style.display = "none";
+    }};
+
     function updateFrame(k) {{
+        popup.style.display = "none";
         frame = k;
         const i = data.indices[k];
 
@@ -284,6 +333,10 @@ def render_top_model(lon_values, lat_values, output_hours=24):
             "xaxis.range": b[0],
             "yaxis.range": b[1]
         }});
+
+        if (k === data.indices.length - 1) {{
+            popup.style.display = "block";
+        }}
 
         slider.value = k;
         year.textContent = "Year " + (i * data.output_hours / (24 * 365)).toFixed(1);
