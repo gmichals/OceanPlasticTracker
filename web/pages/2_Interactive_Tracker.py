@@ -7,7 +7,7 @@ from historical_river_datasets import HISTORICAL_RIVERS
 import streamlit as st
 
 if st.button("← Back to Home", key="back_to_home"):
-    st.switch_page(str(Path(__file__).resolve().parents[1] / "Home.py"))
+    st.switch_page("web/Home.py")
 
 
 import xarray as xr
@@ -105,16 +105,6 @@ if location is not None and location.startswith("──"):
 
 
 
-# Record genuine river selections, not ordinary Streamlit reruns.
-from usage_analytics import record_trajectory
-
-previous_river = st.session_state.get("analytics_previous_river")
-
-if location != previous_river:
-    if location in HISTORICAL_RIVERS:
-        record_trajectory(location, "river_selected")
-    st.session_state["analytics_previous_river"] = location
-
 # Historical trajectories for the smooth browser-side animation.
 historical_lon = None
 historical_lat = None
@@ -158,7 +148,6 @@ if location in HISTORICAL_RIVERS:
             selected_river_particle = random.choice(choices)
 
         st.session_state[selection_key] = selected_river_particle
-        record_trajectory(location, "new_particle")
         st.rerun()
 
     historical_lon = river_lon[selected_river_particle]
@@ -389,3 +378,46 @@ with info_col:
           <div class="source-note">{safe(source_text)}</div>
         </div>
         """, unsafe_allow_html=True)
+
+    else:
+        st.markdown("### Understanding River Plastic Emissions")
+
+        st.markdown("""
+        **Watershed population**
+
+        People living within the river's drainage basin.
+        Used to estimate total plastic waste generation.
+
+        **Mismanaged plastic waste (MPW)**
+
+        Plastic waste inadequately collected or disposed of
+        (kg/person/year). Combined with population, it
+        estimates the waste potentially available for transport.
+
+        **Annual precipitation**
+
+        Average watershed rainfall (mm/year).
+        Rainfall and runoff help move plastic from land
+        into rivers and toward the ocean.
+
+        **Watershed area**
+
+        Land area draining into the river (km²).
+        Helps characterize the drainage system and
+        hydrological transport potential.
+
+        **River plastic flux**
+
+        Estimated plastic mass entering the ocean
+        (tonnes/year). Only a fraction of mismanaged
+        waste reaches the ocean because plastic may
+        be retained on land or within rivers.
+
+        ---
+
+        *Based on the river plastic emission framework
+        of Meijer et al. (2021), Science Advances.
+        These variables help explain emissions but
+        do not independently constitute a calibrated
+        flux calculation.*
+        """)
