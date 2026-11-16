@@ -167,39 +167,6 @@ direct observations of plastic concentrations.
 
 st.divider()
 
-st.markdown('<span class="section-number">02 / THE BIG PICTURE</span>',
-            unsafe_allow_html=True)
-st.header("The Ocean Is Always Moving")
-
-# NASA CIRCULATION FIGURE
-st.image(
-    str(Path(__file__).resolve().parent.parent /
-        "NASA circulation.png"),
-    use_container_width=True,
-)
-
-st.caption(
-    "Figure 2. Global ocean circulation. NASA's Perpetual Ocean visualization illustrates the complex structure of ocean currents and eddies. This is a NASA ocean-model visualization, not output from the Ocean Plastic Tracker. Source: NASA Scientific Visualization Studio."
-)
-
-
-st.write("""
-The ocean is a dynamic system of currents, eddies, and large-scale
-circulation patterns. Surface currents are influenced by winds,
-Earth's rotation, pressure gradients, and the distribution of
-temperature and salinity.
-
-When floating material enters the ocean, it becomes part of this
-moving system. Plastic released near one coastline can remain in
-coastal waters, move into the open ocean, or travel across entire
-ocean basins.
-
-Subtropical ocean gyres are especially important because their
-circulation can create regions where floating material accumulates.
-However, an ocean gyre is not a stationary whirlpool, and not every
-particle entering a gyre remains there.
-""")
-
 # MPW_TO_OCEAN_METHODS_SECTION
 st.markdown(r"""
 ## From plastic waste generation to ocean plastic flux
@@ -289,6 +256,39 @@ mobilization, transport, and model calibration.
 *Science Advances*, 7, eaaz5803.
 
 https://doi.org/10.1126/sciadv.aaz5803
+""")
+
+st.markdown('<span class="section-number">02 / THE BIG PICTURE</span>',
+            unsafe_allow_html=True)
+st.header("The Ocean Is Always Moving")
+
+# NASA CIRCULATION FIGURE
+st.image(
+    str(Path(__file__).resolve().parent.parent /
+        "NASA circulation.png"),
+    use_container_width=True,
+)
+
+st.caption(
+    "Figure 2. Global ocean circulation. NASA's Perpetual Ocean visualization illustrates the complex structure of ocean currents and eddies. This is a NASA ocean-model visualization, not output from the Ocean Plastic Tracker. Source: NASA Scientific Visualization Studio."
+)
+
+
+st.write("""
+The ocean is a dynamic system of currents, eddies, and large-scale
+circulation patterns. Surface currents are influenced by winds,
+Earth's rotation, pressure gradients, and the distribution of
+temperature and salinity.
+
+When floating material enters the ocean, it becomes part of this
+moving system. Plastic released near one coastline can remain in
+coastal waters, move into the open ocean, or travel across entire
+ocean basins.
+
+Subtropical ocean gyres are especially important because their
+circulation can create regions where floating material accumulates.
+However, an ocean gyre is not a stationary whirlpool, and not every
+particle entering a gyre remains there.
 """)
 
 st.markdown('<span class="section-number">03 / THE NUMERICAL MODEL</span>',
