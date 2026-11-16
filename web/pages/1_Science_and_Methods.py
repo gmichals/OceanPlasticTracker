@@ -200,6 +200,97 @@ However, an ocean gyre is not a stationary whirlpool, and not every
 particle entering a gyre remains there.
 """)
 
+# MPW_TO_OCEAN_METHODS_SECTION
+st.markdown(r"""
+## From plastic waste generation to ocean plastic flux
+
+### 1. Plastic waste generation
+
+Annual plastic waste generation is estimated using population
+and plastic waste generated per person:
+
+$$
+W_i = N_i \times w_i
+$$
+
+where $N_i$ is population and $w_i$ is annual plastic waste
+generation per person in geographic grid cell $i$.
+
+### 2. Mismanaged plastic waste (MPW)
+
+Mismanaged plastic waste is the portion of generated waste
+that is inadequately collected or disposed of.
+
+$$
+MPW_i = W_i \times f_{\mathrm{mismanaged},i}
+$$
+
+The mismanaged fraction reflects waste-management conditions,
+including collection coverage and disposal practices.
+
+MPW represents potential environmental plastic pollution.
+It does not mean that all this plastic enters a river or ocean.
+
+### 3. Calculating river-to-ocean plastic flux
+
+In the conceptual framework of Meijer et al. (2021),
+the annual ocean plastic flux is calculated by combining
+spatially distributed MPW with modeled transport probabilities:
+
+$$
+F_{\mathrm{ocean}} =
+\sum_{i=1}^{n}
+MPW_i \, P(M)_i \, P(R)_i \, P(O)_i
+$$
+
+**Definitions:**
+
+- **Σ (capital Greek letter sigma)** means **sum**:
+  add together the contributions from all geographic grid cells.
+- **i** identifies an individual grid cell.
+- **n** is the total number of grid cells in the watershed.
+- **MPW** is annual mismanaged plastic waste.
+- **P(M)** is the probability of plastic mobilization,
+  influenced by rainfall and wind.
+- **P(R)** is the probability of reaching a river,
+  influenced by distance, terrain, and land characteristics.
+- **P(O)** is the probability of reaching the ocean,
+  influenced by river transport and retention.
+
+The probabilities vary geographically. Consequently,
+two watersheds producing similar amounts of mismanaged
+plastic waste may deliver very different amounts to the ocean.
+
+### 4. How Ocean Plastic Tracker uses these estimates
+
+Our tracker separates two processes:
+
+1. **River-to-ocean emissions:** Published modeled estimates
+   provide the amount of plastic entering the ocean from rivers.
+2. **Ocean transport:** OceanParcels simulates the subsequent
+   movement of plastic particles using ocean-current forcing
+   and the transport processes implemented in the tracker.
+
+The tracker does not currently reproduce the complete
+Meijer land-to-ocean emissions model.
+
+Waste-generation indicators from Cottom et al. (2024)
+provide additional watershed context. They should not
+be confused with the original Meijer model inputs.
+
+### 5. Uncertainty and limitations
+
+River emissions are modeled estimates, not continuous
+direct measurements. Uncertainty arises from population,
+waste inventories, management practices, rainfall,
+mobilization, transport, and model calibration.
+
+**Reference:** Meijer et al. (2021),
+*Science Advances*, 7, eaaz5803.
+
+https://doi.org/10.1126/sciadv.aaz5803
+""")
+
 st.markdown('<span class="section-number">03 / THE NUMERICAL MODEL</span>',
             unsafe_allow_html=True)
 st.header("Following Particles Through the Ocean")
@@ -392,95 +483,3 @@ st.caption(
     "Ocean Plastic Tracker | Educational particle-transport simulations "
     "using OceanParcels and historical ocean circulation data."
 )
-
-
-# MPW_TO_OCEAN_METHODS_SECTION
-st.markdown(r"""
-## From plastic waste generation to ocean plastic flux
-
-### 1. Plastic waste generation
-
-Annual plastic waste generation is estimated using population
-and plastic waste generated per person:
-
-$$
-W_i = N_i \times w_i
-$$
-
-where $N_i$ is population and $w_i$ is annual plastic waste
-generation per person in geographic grid cell $i$.
-
-### 2. Mismanaged plastic waste (MPW)
-
-Mismanaged plastic waste is the portion of generated waste
-that is inadequately collected or disposed of.
-
-$$
-MPW_i = W_i \times f_{\mathrm{mismanaged},i}
-$$
-
-The mismanaged fraction reflects waste-management conditions,
-including collection coverage and disposal practices.
-
-MPW represents potential environmental plastic pollution.
-It does not mean that all this plastic enters a river or ocean.
-
-### 3. Calculating river-to-ocean plastic flux
-
-In the conceptual framework of Meijer et al. (2021),
-the annual ocean plastic flux is calculated by combining
-spatially distributed MPW with modeled transport probabilities:
-
-$$
-F_{\mathrm{ocean}} =
-\sum_{i=1}^{n}
-MPW_i \, P(M)_i \, P(R)_i \, P(O)_i
-$$
-
-**Definitions:**
-
-- **Σ (capital Greek letter sigma)** means **sum**:
-  add together the contributions from all geographic grid cells.
-- **i** identifies an individual grid cell.
-- **n** is the total number of grid cells in the watershed.
-- **MPW** is annual mismanaged plastic waste.
-- **P(M)** is the probability of plastic mobilization,
-  influenced by rainfall and wind.
-- **P(R)** is the probability of reaching a river,
-  influenced by distance, terrain, and land characteristics.
-- **P(O)** is the probability of reaching the ocean,
-  influenced by river transport and retention.
-
-The probabilities vary geographically. Consequently,
-two watersheds producing similar amounts of mismanaged
-plastic waste may deliver very different amounts to the ocean.
-
-### 4. How Ocean Plastic Tracker uses these estimates
-
-Our tracker separates two processes:
-
-1. **River-to-ocean emissions:** Published modeled estimates
-   provide the amount of plastic entering the ocean from rivers.
-2. **Ocean transport:** OceanParcels simulates the subsequent
-   movement of plastic particles using ocean-current forcing
-   and the transport processes implemented in the tracker.
-
-The tracker does not currently reproduce the complete
-Meijer land-to-ocean emissions model.
-
-Waste-generation indicators from Cottom et al. (2024)
-provide additional watershed context. They should not
-be confused with the original Meijer model inputs.
-
-### 5. Uncertainty and limitations
-
-River emissions are modeled estimates, not continuous
-direct measurements. Uncertainty arises from population,
-waste inventories, management practices, rainfall,
-mobilization, transport, and model calibration.
-
-**Reference:** Meijer et al. (2021),
-*Science Advances*, 7, eaaz5803.
-
-https://doi.org/10.1126/sciadv.aaz5803
-""")
