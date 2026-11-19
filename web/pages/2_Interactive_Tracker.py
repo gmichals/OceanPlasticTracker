@@ -132,7 +132,16 @@ if location in HISTORICAL_RIVERS:
     if selection_key not in st.session_state:
         st.session_state[selection_key] = random.randrange(n_particles)
 
-    # The dropdown uses the same session-state key as the random button.
+    # Random selection callback runs before widget creation.
+    def choose_random_particle():
+        current = st.session_state[selection_key]
+        choices = [
+            i for i in range(n_particles)
+            if i != current
+        ]
+        if choices:
+            st.session_state[selection_key] = random.choice(choices)
+
     selected_river_particle = st.selectbox(
         "Particle number",
         options=list(range(n_particles)),
@@ -145,18 +154,11 @@ if location in HISTORICAL_RIVERS:
         f"of {n_particles} from the {location} River"
     )
 
-    if st.button(
+    st.button(
         "🔀 Start Again — New Random Particle",
-        key=f"new_particle_{location}"
-    ):
-        if n_particles > 1:
-            choices = [
-                i for i in range(n_particles)
-                if i != selected_river_particle
-            ]
-            st.session_state[selection_key] = random.choice(choices)
-
-        st.rerun()
+        key=f"new_particle_{location}",
+        on_click=choose_random_particle,
+    )
 
     historical_lon = river_lon[selected_river_particle]
     historical_lat = river_lat[selected_river_particle]
