@@ -128,26 +128,34 @@ if location in HISTORICAL_RIVERS:
         st.error("No particle trajectories available.")
         st.stop()
 
+    # Store a zero-based particle index for each river.
     if selection_key not in st.session_state:
         st.session_state[selection_key] = random.randrange(n_particles)
 
-    selected_river_particle = st.session_state[selection_key]
+    # The dropdown uses the same session-state key as the random button.
+    selected_river_particle = st.selectbox(
+        "Particle number",
+        options=list(range(n_particles)),
+        format_func=lambda i: f"Particle {i + 1}",
+        key=selection_key,
+    )
 
     st.caption(
         f"Tracking particle #{selected_river_particle + 1} "
         f"of {n_particles} from the {location} River"
     )
 
-    if st.button("🔀 Start Again — New Random Particle",
-                 key=f"new_particle_{location}"):
+    if st.button(
+        "🔀 Start Again — New Random Particle",
+        key=f"new_particle_{location}"
+    ):
         if n_particles > 1:
             choices = [
                 i for i in range(n_particles)
                 if i != selected_river_particle
             ]
-            selected_river_particle = random.choice(choices)
+            st.session_state[selection_key] = random.choice(choices)
 
-        st.session_state[selection_key] = selected_river_particle
         st.rerun()
 
     historical_lon = river_lon[selected_river_particle]
