@@ -89,6 +89,8 @@ river_options = (
     + [name for name in SELECTED_RIVERS if name not in MAJOR_RIVERS]
 )
 
+from usage_analytics import record_trajectory
+
 location = st.selectbox(
     "River",
     river_options,
@@ -104,6 +106,15 @@ if location is not None and location.startswith("──"):
     location = None
 
 
+
+# Record each new river selection once per session.
+if "analytics_previous_river" not in st.session_state:
+    st.session_state["analytics_previous_river"] = None
+
+if location != st.session_state["analytics_previous_river"]:
+    st.session_state["analytics_previous_river"] = location
+    if location in HISTORICAL_RIVERS:
+        record_trajectory(location, "river_selected")
 
 # Historical trajectories for the smooth browser-side animation.
 historical_lon = None
@@ -134,6 +145,7 @@ if location in HISTORICAL_RIVERS:
 
     # Random selection callback runs before widget creation.
     def choose_random_particle():
+        record_trajectory(location, "new_particle")
         current = st.session_state[selection_key]
         choices = [
             i for i in range(n_particles)
